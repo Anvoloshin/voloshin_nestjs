@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Task } from '../src/task.model';
+import { Task } from './tasks/task.model';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { Task } from '../src/task.model';
       }),
       inject: [ConfigService],
     }),
+    TasksModule,
   ],
 })
 export class AppModule {}
