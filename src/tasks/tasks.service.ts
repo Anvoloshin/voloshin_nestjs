@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Task } from './task.model';
 
@@ -25,16 +25,19 @@ export class TasksService {
     return [affectedCount, affectedRows as Task[]];
   }
 
-  async updateCompleted(): Promise<void> {
+  async updateCompleted(): Promise<void | never> {
     const allTasks = await this.taskModel.findAll();
-    const isCompleted = allTasks.some((allTasks) => allTasks.completed);
+    if (allTasks.length === 0) throw new Error('Error!');
+    const isCompleted = allTasks.some((allTasks) => allTasks.completed == false);
     allTasks.forEach((elem) => {
-      elem.completed = !isCompleted;
+      elem.completed = isCompleted;
       elem.save();
     });
+    throw new HttpException('data fields updated successfully', HttpStatus.OK);
   }
 
   async remove(id: number): Promise<number> {
+    if ((await this.taskModel.findAll()).length === 0) throw new Error('Error!');
     return this.taskModel.destroy({ where: { id } });
   }
 
