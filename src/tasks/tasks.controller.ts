@@ -21,7 +21,7 @@ export class TasksController {
   }
 
   @Patch()
-  updateCompleted(): Promise<void> {
+  updateCompleted(): Promise<void | never> {
     return this.tasksService.updateCompleted();
   }
 
