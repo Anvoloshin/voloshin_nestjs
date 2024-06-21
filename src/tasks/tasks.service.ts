@@ -13,8 +13,16 @@ export class TasksService {
     return this.taskModel.findAll();
   }
 
-  async create(TaskData): Promise<Task> {
-    const task = new Task(TaskData);
-    return task.save();
+  async create(taskData): Promise<Task> {
+    return Task.create(taskData);
   }
+
+  async update(id: number, taskData): Promise<[number, Task[]]> {
+    const [affectedCount, affectedRows] = await this.taskModel.update(taskData,{where:{id},returning:true,});
+    return [affectedCount, affectedRows as Task[]];
+  }
+
+  // изменение статуса выполнения всех записей;
+  // удаление одной записи;
+  // удаление всех выполненных.
 }
