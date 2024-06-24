@@ -1,4 +1,12 @@
-import { Body, Param, Controller, Get, Patch, Post, Delete } from '@nestjs/common';
+import {
+  Body,
+  Param,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Delete,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
 
@@ -16,12 +24,12 @@ export class TasksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() taskData): Promise<[number, Task[]]> {
+  update(@Param('id') id: string, @Body() taskData): Promise<void> {
     return this.tasksService.update(Number(id), taskData);
   }
 
   @Patch()
-  updateCompleted(): Promise<void | never> {
+  updateCompleted(): Promise<void> {
     return this.tasksService.updateCompleted();
   }
 
