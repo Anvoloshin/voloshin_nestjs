@@ -17,27 +17,30 @@ export class TasksService {
     return Task.create(taskData);
   }
 
-  async update(id: number, taskData): Promise<[number, Task[]]> {
-    const [affectedCount, affectedRows] = await this.taskModel.update(
-      taskData,
-      { where: { id }, returning: true },
-    );
-    return [affectedCount, affectedRows as Task[]];
+  async update(id: number, taskData): Promise<void> {
+    await Task.update(taskData, {
+      where: { id },
+    });
   }
 
-  async updateCompleted(): Promise<void | never> {
+  async updateCompleted(): Promise<void> {
     const allTasks = await this.taskModel.findAll();
-    if (allTasks.length === 0) throw new Error('Error!');
-    const isCompleted = allTasks.some((allTasks) => allTasks.completed == false);
-    allTasks.forEach((elem) => {
-      elem.completed = isCompleted;
-      elem.save();
-    });
-    throw new HttpException('data fields updated successfully', HttpStatus.OK);
+    const isCompleted = allTasks.some(
+      (allTasks) => allTasks.completed == false,
+    );
+    await Task.update(
+      {
+        completed: isCompleted,
+      },
+      {
+        where: {
+          completed: !isCompleted,
+        },
+      },
+    );
   }
 
   async remove(id: number): Promise<number> {
-    if ((await this.taskModel.findAll()).length === 0) throw new Error('Error!');
     return this.taskModel.destroy({ where: { id } });
   }
 
