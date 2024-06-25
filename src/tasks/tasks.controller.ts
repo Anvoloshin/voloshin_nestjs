@@ -6,9 +6,13 @@ import {
   Patch,
   Post,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
+
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
+import { TaskUpdateDto } from './dto/taskUpdate.dto';
+import { TaskCreateDto } from './dto/taskCreate.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -19,27 +23,30 @@ export class TasksController {
   }
 
   @Post()
-  create(@Body() taskData): Promise<Task> {
+  create(@Body() taskData: TaskCreateDto): Promise<Task> {
     return this.tasksService.create(taskData);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() taskData): Promise<void> {
-    return this.tasksService.update(Number(id), taskData);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() taskData: TaskUpdateDto,
+  ): Promise<Task> {
+    return this.tasksService.update(id, taskData);
   }
 
   @Patch()
-  updateCompleted(): Promise<void> {
-    return this.tasksService.updateCompleted();
+  updateCompleted(@Body() taskData: TaskUpdateDto): Promise<void> {
+    return this.tasksService.updateCompleted(taskData);
+  }
+
+  @Delete('clear')
+  removeCompleted(): Promise<void> {
+    return this.tasksService.removeCompleted();
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<number> {
-    return this.tasksService.remove(Number(id));
-  }
-
-  @Delete()
-  removeCompleted(): Promise<number> {
-    return this.tasksService.removeCompleted();
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.tasksService.remove(id);
   }
 }
