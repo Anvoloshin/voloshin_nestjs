@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+
 import { Task } from './task.model';
+import { TaskUpdateDto } from './dto/taskUpdate.dto';
+import { TaskCreateDto } from './dto/taskCreate.dto';
 
 @Injectable()
 export class TasksService {
@@ -9,42 +12,42 @@ export class TasksService {
     private readonly taskModel: typeof Task,
   ) {}
 
-  async findAll(): Promise<Task[]> {
+  findAll(): Promise<Task[]> {
     return this.taskModel.findAll();
   }
 
-  async create(taskData): Promise<Task> {
+  create(taskData: TaskCreateDto): Promise<Task> {
     return Task.create(taskData);
   }
 
-  async update(id: number, taskData): Promise<void> {
-    await Task.update(taskData, {
+  async update(id: number, taskData: TaskUpdateDto): Promise<Task> {
+    const [countTask, updatedTask] = await Task.update(taskData, {
       where: { id },
+      returning: true,
     });
+    if (countTask === 0) {
+      throw new Error('Tasks List empty or this "id" does not exist!');
+    }
+    return updatedTask[0];
   }
 
-  async updateCompleted(): Promise<void> {
-    const allTasks = await this.taskModel.findAll();
-    const isCompleted = allTasks.some(
-      (allTasks) => allTasks.completed == false,
+  async updateCompleted(taskData: TaskUpdateDto): Promise<void> {
+    await Task.update(taskData, {
+      where: { completed: !taskData.completed },
+    });
+    throw new HttpException('Update successfully!', HttpStatus.OK);
+  }
+
+  remove(id: number): Promise<void> {
+    this.taskModel.destroy({ where: { id } });
+    throw new HttpException(
+      'Remove by id complete successfully!',
+      HttpStatus.OK,
     );
-    await Task.update(
-      {
-        completed: isCompleted,
-      },
-      {
-        where: {
-          completed: !isCompleted,
-        },
-      },
-    );
   }
 
-  async remove(id: number): Promise<number> {
-    return this.taskModel.destroy({ where: { id } });
-  }
-
-  async removeCompleted(): Promise<number> {
-    return this.taskModel.destroy({ where: { completed: true } });
+  removeCompleted(): Promise<void> {
+    this.taskModel.destroy({ where: { completed: true } });
+    throw new HttpException('Completed tasks deleted!', HttpStatus.OK);
   }
 }
