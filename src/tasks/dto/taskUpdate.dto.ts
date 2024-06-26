@@ -1,12 +1,22 @@
-import { IsBoolean, IsEmpty, IsString, Max } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class TaskUpdateDto {
-  @IsEmpty()
+  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  @Max(255)
-  readonly name: string;
+  @MaxLength(255)
+  @Transform(({ value }) => value.trim())
+  name?: string;
 
-  @IsEmpty()
+  @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
-  readonly completed: boolean;
+  completed?: boolean;
 }
