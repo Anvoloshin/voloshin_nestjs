@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { Task } from './task.model';
@@ -31,23 +31,31 @@ export class TasksService {
     return updatedTask[0];
   }
 
-  async updateCompleted(taskData: TaskUpdateDto): Promise<void> {
-    await Task.update(taskData, {
+  async updateCompleted(taskData: TaskUpdateDto): Promise<string> {
+    const [countTask] = await Task.update(taskData, {
       where: { completed: !taskData.completed },
     });
-    throw new HttpException('Update successfully!', HttpStatus.OK);
+    if (countTask === 0) {
+      throw new Error('Data cannot be changed!');
+    }
+    return 'Update successfully!';
   }
 
-  remove(id: number): Promise<void> {
-    this.taskModel.destroy({ where: { id } });
-    throw new HttpException(
-      'Remove by id complete successfully!',
-      HttpStatus.OK,
-    );
+  async remove(id: number): Promise<string> {
+    const deletedTask = await this.taskModel.destroy({ where: { id } });
+    if (deletedTask !== 1) {
+      throw new Error('Tasks List empty or this "id" does not exist!');
+    }
+    return 'Task deleted by "id" successfully!';
   }
 
-  removeCompleted(): Promise<void> {
-    this.taskModel.destroy({ where: { completed: true } });
-    throw new HttpException('Completed tasks deleted!', HttpStatus.OK);
+  async removeCompleted(): Promise<string> {
+    const deletedTasks = await this.taskModel.destroy({
+      where: { completed: true },
+    });
+    if (deletedTasks === 0) {
+      throw new Error('Tasks List empty or no completed tasks!');
+    }
+    return 'Completed tasks deleted!';
   }
 }

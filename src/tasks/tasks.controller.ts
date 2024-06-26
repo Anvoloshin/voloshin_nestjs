@@ -36,17 +36,17 @@ export class TasksController {
   }
 
   @Patch()
-  updateCompleted(@Body() taskData: TaskUpdateDto): Promise<void> {
+  updateCompleted(@Body() taskData: TaskUpdateDto): Promise<string> {
     return this.tasksService.updateCompleted(taskData);
   }
 
   @Delete('clear')
-  removeCompleted(): Promise<void> {
+  removeCompleted(): Promise<string> {
     return this.tasksService.removeCompleted();
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.tasksService.remove(id);
   }
 }
