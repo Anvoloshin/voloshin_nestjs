@@ -13,6 +13,7 @@ import { TasksService } from './tasks.service';
 import { Task } from './task.model';
 import { TaskUpdateDto } from './dto/taskUpdate.dto';
 import { TaskCreateDto } from './dto/taskCreate.dto';
+import { TaskUpdateCompletedDto } from './dto/taskUpdateCompleted.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -36,7 +37,7 @@ export class TasksController {
   }
 
   @Patch()
-  updateCompleted(@Body() taskData: TaskUpdateDto): Promise<string> {
+  updateCompleted(@Body() taskData: TaskUpdateCompletedDto): Promise<string> {
     return this.tasksService.updateCompleted(taskData);
   }
 
