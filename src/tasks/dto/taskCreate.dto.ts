@@ -1,8 +1,10 @@
-import { IsEmpty, IsString, Max } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class TaskCreateDto {
-  @IsEmpty()
   @IsString()
-  @Max(255)
-  readonly name: string;
+  @Transform(({ value }) => value.trim())
+  @IsNotEmpty()
+  @MaxLength(255)
+  name: string;
 }

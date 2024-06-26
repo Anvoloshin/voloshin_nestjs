@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Task } from './task.model';
 import { TaskUpdateDto } from './dto/taskUpdate.dto';
 import { TaskCreateDto } from './dto/taskCreate.dto';
+import { TaskUpdateCompletedDto } from './dto/taskUpdateCompleted.dto';
 
 @Injectable()
 export class TasksService {
@@ -31,7 +32,7 @@ export class TasksService {
     return updatedTask[0];
   }
 
-  async updateCompleted(taskData: TaskUpdateDto): Promise<string> {
+  async updateCompleted(taskData: TaskUpdateCompletedDto): Promise<string> {
     const [countTask] = await Task.update(taskData, {
       where: { completed: !taskData.completed },
     });
