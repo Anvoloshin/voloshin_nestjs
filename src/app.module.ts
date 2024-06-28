@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+<<<<<<< HEAD
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 
@@ -23,5 +24,14 @@ import { TasksModule } from './tasks/tasks.module';
     }),
     TasksModule,
   ],
+=======
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+>>>>>>> main
 })
 export class AppModule {}
