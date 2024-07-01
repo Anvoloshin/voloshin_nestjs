@@ -14,7 +14,10 @@ export class TasksService {
   ) {}
 
   findAll(): Promise<Task[]> {
-    return this.taskModel.findAll();
+    return this.taskModel.findAll({
+      attributes: ['id', 'name', 'completed'],
+      order: ['id'],
+    });
   }
 
   create(taskData: TaskCreateDto): Promise<Task> {
