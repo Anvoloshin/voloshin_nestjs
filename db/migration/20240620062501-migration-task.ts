@@ -1,9 +1,6 @@
-'use strict';
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up(queryInterface, Sequelize) {
-    return queryInterface.createTable('Tasks', {
+    return queryInterface.createTable('tasks', {
       id: {
         autoIncrement: true,
         primaryKey: true,
@@ -36,6 +33,6 @@ module.exports = {
   },
 
   down(queryInterface) {
-    return queryInterface.dropTable('Tasks');
+    return queryInterface.dropTable('tasks');
   },
 };
