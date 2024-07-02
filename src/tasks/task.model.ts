@@ -6,5 +6,5 @@ export class Task extends Model<Task> {
   name: string;
 
   @Column({ defaultValue: false })
-  completed: boolean;
+  isCompleted: boolean;
 }
