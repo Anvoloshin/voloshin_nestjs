@@ -18,5 +18,5 @@ export class TaskUpdateDto {
   @IsOptional()
   @IsNotEmpty()
   @IsBoolean()
-  completed?: boolean;
+  isCompleted?: boolean;
 }

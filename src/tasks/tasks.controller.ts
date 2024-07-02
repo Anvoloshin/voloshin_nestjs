@@ -11,13 +11,14 @@ import {
 
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
-import { TaskUpdateDto } from './dto/taskUpdate.dto';
-import { TaskCreateDto } from './dto/taskCreate.dto';
-import { TaskUpdateCompletedDto } from './dto/taskUpdateCompleted.dto';
+import { TaskUpdateDto } from './dto/update-task.dto';
+import { TaskCreateDto } from './dto/create-task.dto';
+import { TaskUpdateCompletedDto } from './dto/update-completed-task.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
+
   @Get()
   findAll(): Promise<Task[]> {
     return this.tasksService.findAll();
@@ -41,7 +42,7 @@ export class TasksController {
     return this.tasksService.updateCompleted(taskData);
   }
 
-  @Delete('clear')
+  @Delete('completed')
   removeCompleted(): Promise<string> {
     return this.tasksService.removeCompleted();
   }
